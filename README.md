@@ -1,0 +1,2 @@
+# ddash
+useful functions
