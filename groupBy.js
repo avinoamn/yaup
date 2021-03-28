@@ -18,7 +18,7 @@ import { groupMethodsMap } from './mappings.js';
  *  e.g.
  *  {
  *    'default': 'array'
- *    'field1': '+',
+ *    'field1': 'sum',
  *    'field2': (prev, curr, field) => prev ? prev[field] * curr[field] : curr[field] 
  *  }
  *  When providing your own group method, use the conditional operator(a ? b : c) to determine
