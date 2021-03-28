@@ -3,7 +3,6 @@ export const debounceDefaultOptions = {
 };
 
 export const groupByDefaultOptions = {
-    groupedFields: [],
-    groupFieldsMethod: 'array',
-    groupFieldsMethods: {}
+    fieldsToGroup: [],
+    groupMethods: { default: 'array' }
 };

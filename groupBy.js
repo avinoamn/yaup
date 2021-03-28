@@ -1,5 +1,5 @@
 import { groupByDefaultOptions } from './defaultOptions.js';
-import { groupFieldsMethodsMapping } from './mappings.js';
+import { groupMethodsMap } from './mappings.js';
 
 /**
  * Groups an Array of objects by given keys.
@@ -9,36 +9,40 @@ import { groupFieldsMethodsMapping } from './mappings.js';
  * @param {Array} [array=[]] The Array of objects to group.
  * @param {Array} [keys=[]] The Array of keys to group by.
  * @param {Object} [options={}] The options object.
- * @param {Array} [options.groupedFields=[]]
+ * @param {Array} [options.fieldsToGroup=[]]
  *  Specify fields to group inside the object. When empty, it will return array of grouped objects
  *  instead of one objects with grouped fields.
- * @param {String|Function} [options.groupFieldsMethod='array']
- *  Specify the group method for the groupedFields.
- * @param {Object} [options.groupFieldsMethods={}]
- *  Specify the group method for each specific groupedField (will override options.groupFieldsMethod
- *  for those fields). e.g. {'field1': 'array', 'field2': '+'}
+ * @param {Object} [options.groupMethods={ default: 'array' }]
+ *  Specify the group methods for each field in fieldsToGroup. Must have a default method or a method
+ *  for every field in fieldsToGroup.
+ *  e.g.
+ *  {
+ *    'default': 'array'
+ *    'field1': '+',
+ *    'field2': (prev, curr, field) => prev ? prev[field] * curr[field] : curr[field] 
+ *  }
+ *  When providing your own group method, use the conditional operator(a ? b : c) to determine
+ *  what wil be the first value.
  * @returns {Array} Returns the grouped values Array.
  */
 
 function groupBy(array = [], keys = [], options = {}) {
-    const { groupedFields, groupFieldsMethod, groupFieldsMethods } = { ...groupByDefaultOptions, ...options };
+    const { fieldsToGroup, groupMethods } = { ...groupByDefaultOptions, ...options };
 
-     function getGroupFieldMethod(field) {
-        return groupFieldsMethods[field] ?
-            groupFieldsMethodsMapping(groupFieldsMethods[field]) :
-            groupFieldsMethodsMapping(groupFieldsMethod)
+     function getGroupMethod(field) {
+        return groupMethods[field] ?
+            groupMethodsMap(groupMethods[field]) :
+            groupMethodsMap(groupMethods.default)
     }
 
     function getKey(currValue) {
         return keys.reduce((resKey, currKey) => resKey.concat(`${currKey}:${currValue[currKey]}`), []);
     }
 
-    function getGroupedFieldsObj(resObj, currValue) {
-        return groupedFields.reduce((resGroupedFieldsObj, currField) => ({
-            ...resGroupedFieldsObj,
-            [currField]: resObj ?
-                getGroupFieldMethod(currField)(resObj, currValue, currField) :
-                currValue[currField]
+    function groupFields(resObj, currValue) {
+        return fieldsToGroup.reduce((groupedFields, currField) => ({
+            ...groupedFields,
+            [currField]: getGroupMethod(currField)(resObj, currValue, currField)
         }), {});
     }
 
@@ -46,9 +50,9 @@ function groupBy(array = [], keys = [], options = {}) {
         const key = getKey(currValue);
         return {
             ...resObj,
-            [key]: groupedFields.length === 0 ?
+            [key]: fieldsToGroup.length === 0 ?
                 (resObj[key] ? resObj[key].concat([currValue]) : [currValue]) :
-                { ...currValue, ...getGroupedFieldsObj(resObj[key], currValue) }
+                { ...currValue, ...groupFields(resObj[key], currValue) }
         };
     }, {}));
 }
