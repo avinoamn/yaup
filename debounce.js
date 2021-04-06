@@ -30,22 +30,21 @@ function debounce(callback, wait = 0, options = {}) {
     }
 
     async function cancel(id) {
-        clearTimeout(debouncedCalled[id].timer);
+        clearTimeout(debouncedCalled[id]?.timer);
         delete debouncedCalled[id];
     }
 
     async function invoke(id) {
-        if (!applyOnlyLatest || id === lastDebouncedCalled) {
-            if (debouncedCalled[id]) {
-                const { args } = debouncedCalled[id];
-                cancel(id);
-                callback.apply(this, args);
-            }
+        if (debouncedCalled[id]) {
+            const { args } = debouncedCalled[id];
+            cancel(id);
+            callback.apply(this, args);
         }
     }
 
     function debounced(...args) {
         const currDebounced = uuid();
+        if (applyOnlyLatest) cancel(lastDebouncedCalled);
         lastDebouncedCalled = currDebounced;
         debouncedCalled[currDebounced] = { args, timer: setTimeout(() => invoke(currDebounced), wait) };
     }
