@@ -13,8 +13,7 @@ import { groupMethodsMap } from './mappings.js';
  *  Specify fields to group inside the object. When empty, it will return array of grouped objects
  *  instead of one objects with grouped fields.
  * @param {Object} [options.groupMethods={ default: 'array' }]
- *  Specify the group methods for each field in fieldsToGroup. Must have a default method or a method
- *  for every field in fieldsToGroup.
+ *  Specify the group methods for each field in fieldsToGroup.
  *  e.g.
  *  {
  *    'default': 'array'
