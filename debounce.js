@@ -18,11 +18,11 @@ import { debounceDefaultOptions } from './defaultOptions.js';
  * @returns {Function} Returns the new debounced function.
  */
 
-function debounce(func, wait = 0, options = {}) {
+function debounce(callback, wait = 0, options = {}) {
     const { applyOnlyLatest } = { ...debounceDefaultOptions, ...options };
-    let latestDebouncedId, debouncedFunctions = {};
+    let lastDebouncedCalled, debouncedCalled = {};
 
-    if (typeof func !== 'function') {
+    if (typeof callback !== 'function') {
         throw new TypeError('Expected a function');
     }
     if (typeof wait !== 'number') {
@@ -30,30 +30,30 @@ function debounce(func, wait = 0, options = {}) {
     }
 
     async function cancel(id) {
-        clearTimeout(debouncedFunctions[id].timer);
-        delete debouncedFunctions[id];
+        clearTimeout(debouncedCalled[id].timer);
+        delete debouncedCalled[id];
     }
 
     async function invoke(id) {
-        if (!applyOnlyLatest || id === latestDebouncedId) {
-            if (debouncedFunctions[id]) {
-                const { func, thisArg, args } = debouncedFunctions[id];
+        if (!applyOnlyLatest || id === lastDebouncedCalled) {
+            if (debouncedCalled[id]) {
+                const { args } = debouncedCalled[id];
                 cancel(id);
-                func.apply(thisArg, args);
+                callback.apply(this, args);
             }
         }
     }
 
     function debounced(...args) {
-        let currDebouncedId = uuid();
-        latestDebouncedId = currDebouncedId;
-        debouncedFunctions[currDebouncedId] = { func, args, thisArg: this, timer: setTimeout(() => invoke(currDebouncedId), wait) };
+        const currDebounced = uuid();
+        lastDebouncedCalled = currDebounced;
+        debouncedCalled[currDebounced] = { args, timer: setTimeout(() => invoke(currDebounced), wait) };
     }
 
-    debounced.invokeAll = async () => Object.keys(debouncedFunctions).forEach(invoke);
-    debounced.cancelAll = async () => Object.keys(debouncedFunctions).forEach(cancel);
-    debounced.invokeLatest = async () => invoke(latestDebouncedId);
-    debounced.cancelLatest = async () => cancel(latestDebouncedId);
+    debounced.invokeAll = async () => Object.keys(debouncedCalled).forEach(invoke);
+    debounced.cancelAll = async () => Object.keys(debouncedCalled).forEach(cancel);
+    debounced.invokeLatest = async () => invoke(lastDebouncedCalled);
+    debounced.cancelLatest = async () => cancel(lastDebouncedCalled);
     return debounced;
 }
 
