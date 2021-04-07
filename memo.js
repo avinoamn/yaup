@@ -32,7 +32,7 @@ function memo(callback, options = {}) {
             const setTime = getSetTime(key);
             if (now - ttl >= setTime) {
                 del(key);
-                timeout(now, keysIterator);
+                timeout(now, keysIterator, uuid);
             }
         }
     }
