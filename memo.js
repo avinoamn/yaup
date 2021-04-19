@@ -1,5 +1,4 @@
-import uuid from './uuid.js';
-import { memoDefaultOptions } from './defaultOptions.js';
+import CACHE from './cache.js';
 
 /**
  * Creates a memoized function that caches return values with `args` as the key.
@@ -16,41 +15,16 @@ import { memoDefaultOptions } from './defaultOptions.js';
  */
 
 function memo(callback, options = {}) {
-    const { maxSize, ttl } = { ...memoDefaultOptions, ...options};
-    const cache = new Map();
-    let currUUID = undefined;
-
-    const getValue = key => cache.get(key).value;
-    const getSetTime = key => cache.get(key).setTime;
-    const set = (key, value) => cache.set(key, { value, setTime: Date.now() });
-    const del = key => cache.delete(key);
-    const pop = () => del(cache.keys().next().value);
-
-    async function timeout(now, keysIterator, uuid) {
-        if (currUUID === uuid) {
-            const key = keysIterator.next().value;
-            const setTime = getSetTime(key);
-            if (now - ttl >= setTime) {
-                del(key);
-                timeout(now, keysIterator, uuid);
-            }
-        }
-    }
+    const cache = CACHE(options);
 
     return function(...args) {
-        currUUID = uuid();
         const key = JSON.stringify(args);
         if (cache.has(key)) {
-            const value = getValue(key);
-            timeout(Date.now(), cache.keys(), currUUID);
-            return value;
+            return cache.get(key);
         }
 
-        timeout(Date.now(), cache.keys(), currUUID);
-        if (cache.size === maxSize) pop();
-
         const value = callback(...args);
-        set(key, value);
+        cache.set(key, value);
         return value;
     };
 }

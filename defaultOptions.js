@@ -7,7 +7,7 @@ export const groupByDefaultOptions = {
     groupMethods: { default: 'array' }
 };
 
-export const memoDefaultOptions = {
+export const cacheDefaultOptions = {
     maxSize: 100,
     ttl: 1000 * 60 * 60
 };
