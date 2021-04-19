@@ -1,5 +1,5 @@
 import uuid from './uuid.js';
-import { debounceDefaultOptions } from './defaultOptions.js';
+import { debounceDefaultOptions } from './consts/defaultOptions.js';
 
 /**
  * Creates a debounced function that delays invoking `callback` until after `wait`

@@ -1,5 +1,5 @@
-import { groupByDefaultOptions } from './defaultOptions.js';
-import { groupMethodsMap } from './mappings.js';
+import { groupByDefaultOptions } from './consts/defaultOptions.js';
+import { groupMethodsMap } from './consts/mappings.js';
 
 /**
  * Groups an Array of objects by given keys.

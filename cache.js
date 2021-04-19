@@ -1,5 +1,5 @@
 import uuid from './uuid.js';
-import { cacheDefaultOptions } from './defaultOptions.js';
+import { cacheDefaultOptions } from './consts/defaultOptions.js';
 
 /**
  * Creates a cache. The cache comes with a 'clear', 'has', 'del', 'pop',
