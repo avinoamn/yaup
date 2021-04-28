@@ -34,8 +34,8 @@ function groupBy(array = [], keys = [], options = {}) {
             groupMethodsMap(groupMethods.default)
     }
 
-    function getKey(currValue) {
-        return keys.reduce((resKey, currKey) => resKey.concat(`${currKey}:${currValue[currKey]}`), []);
+    function getGroupKey(currValue) {
+        return keys.reduce((resKey, currKey) => resKey.concat([currValue[currKey]]), []);
     }
 
     function groupFields(resObj, currValue) {
@@ -46,7 +46,7 @@ function groupBy(array = [], keys = [], options = {}) {
     }
 
     return array.reduce((resObj, currValue) => {
-        const key = getKey(currValue);
+        const key = getGroupKey(currValue);
         return {
             ...resObj,
             [key]: fieldsToGroup.length === 0 ?
