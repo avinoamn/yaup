@@ -45,7 +45,7 @@ function groupBy(array = [], keys = [], options = {}) {
         }), {});
     }
 
-    return Object.values(array.reduce((resObj, currValue) => {
+    return array.reduce((resObj, currValue) => {
         const key = getKey(currValue);
         return {
             ...resObj,
@@ -53,7 +53,7 @@ function groupBy(array = [], keys = [], options = {}) {
                 (resObj[key] ? resObj[key].concat([currValue]) : [currValue]) :
                 { ...currValue, ...groupFields(resObj[key], currValue) }
         };
-    }, {}));
+    }, {});
 }
 
 export default groupBy;
