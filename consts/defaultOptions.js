@@ -4,7 +4,7 @@ export const debounceDefaultOptions = {
 
 export const groupByDefaultOptions = {
     fieldsToGroup: [],
-    groupMethods: { default: 'array' }
+    groupingMethods: { default: 'array' }
 };
 
 export const cacheDefaultOptions = {
