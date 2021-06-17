@@ -1,4 +1,4 @@
-export function groupMethodsMap(method) {
+export function groupingMethodsMap(method) {
     switch (method) {
         case 'array': return (a, b, field) => a ? a[field].concat([b[field]]) : [b[field]];
         case 'count': return (a, b, field) => a ? a[field] + 1 : 1;
@@ -9,7 +9,7 @@ export function groupMethodsMap(method) {
         default:
             if (typeof method === 'function') return method;
             throw new TypeError(
-                `Expected one of the following group methods: 'array', 'count', 'sum 'mul', 'and', 'or'. ` +
+                `Expected one of the following grouping methods: 'array', 'count', 'sum 'mul', 'and', 'or'. ` +
                 `Or an '(a, b, field) => any' group function.`);
     }
 }
