@@ -27,7 +27,7 @@ import { groupingMethodsMap } from './consts/mappings.js';
 
 function groupBy(array, keys, options = {}) {
     const { fieldsToGroup, groupingMethods } = { ...groupByDefaultOptions, ...options };
-    const GroupedFieldsScript = getGroupedFieldsScript();
+    const groupedFieldsScript = getGroupedFieldsScript();
 
     function getGroupingMethod(field) {
         return (groupingMethods[field] ?
@@ -50,7 +50,7 @@ function groupBy(array, keys, options = {}) {
     }
 
     function groupFields(resObj, currValue) {
-        return eval(GroupedFieldsScript);
+        return eval(groupedFieldsScript);
     }
 
     return array.reduce((resObj, currValue) => {
