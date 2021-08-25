@@ -5,3 +5,5 @@ function maxDiff(arr) {
         (acc)
     ), {lowestIndex: 0, maxDiff: 0}).maxDiff;
 }
+
+export default maxDiff;
