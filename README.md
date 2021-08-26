@@ -1,2 +1,2 @@
-# ddash
-useful functions
+# yaup
+Yet Another Utility Package

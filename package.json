@@ -1,7 +1,7 @@
 {
-  "name": "ddash",
+  "name": "yaup",
   "version": "0.1.0",
-  "description": "useful functions",
+  "description": "Yet Another Utility Package",
   "type": "module",
   "main": "index.js",
   "scripts": {
